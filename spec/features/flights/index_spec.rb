@@ -40,10 +40,20 @@ RSpec.describe 'flights index page,' do
   end #if time play around with alternate set up in view with helper
 
   it 'displays names of passengers on flights' do
-    save_and_open_page
+
     expect(page).to have_content(@passenger_1.name)
     expect(page).to have_content(@passenger_2.name)
     expect(page).to have_content(@passenger_3.name)
     expect(page).to have_content(@passenger_4.name)
+  end
+
+  it 'has link to remove passenger from flight without destroying passenger record' do
+    within("#flight-details-#{@flight_1.id}") do
+      expect(page).to have_button("Remove #{@passenger_1.name}")
+      click_button "Remove #{@passenger_1.name}"
+    end
+
+    expect(page).to_not have_content(@passenger_1.name)
+    expect(current_path).to eq(flights_path)
   end
 end
